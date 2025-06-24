@@ -11,7 +11,7 @@ public class MainController {
 	@ResponseBody
 	public String index() {
 //		System.out.println("index");
-		return "sbb 프로젝트 시작해봅시다"; // "index" --> 템플릿 파일 --> 공부...
+		return "sbb 프로젝트 시작해 봅시다~~~"; // "index" ---> 템플릿 파일 --> 공부....
 	}
 
 }
