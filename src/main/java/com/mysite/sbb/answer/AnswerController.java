@@ -21,6 +21,8 @@ public class AnswerController {
 	private final QuestionService questionService;
 	private final AnswerService answerService;
 
+	// 추가된 @requestParam(value = "content") String content -->
+	// (question_detail.html)에서 답변으로 입력한 내용(content)을 사용하기 위함
 	@PostMapping("/create/{id}")
 	public String create(Model model, @PathVariable("id") Integer id, @RequestParam(value = "content") String content) {
 		Question question = this.questionService.getQuestion(id);

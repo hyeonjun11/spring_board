@@ -20,6 +20,7 @@ public class AnswerService {
 		answer.setContent(content);
 		answer.setCreateDate(LocalDateTime.now());
 		answer.setQuestion(question);
+		// answer 객체를 저장한다
 		this.answerRepository.save(answer);
 	}
 }
