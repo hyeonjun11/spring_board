@@ -1,29 +1,34 @@
 <!doctype html>
+
+<!-- 타임리프의 layout:decorate 속성은 템플릿의 레이아웃(부모 템플릿, 여기서는 layout.html) 설정함 -->
 <html layout:decorate="~{layout}">
 <head>
-	<meta charset="UTF-8" />
-	<title>Document</title>
+<meta charset="UTF-8" />
+<title>Document</title>
 </head>
 <body>
+<!-- 타임리프의 layout:fragment="content" 속성은 부모 템플릿의 요소를 자식에게 상속한다  -->
 	<div layout:fragment="content" class="container my-3">
-    	<table class="table">
-       	  <thead class="table-dark">
-         	   <tr>
-              	  <th>번호</th>
-               	  <th>제목</th>
-               	  <th>작성일시</th>
-           	   </tr>
-         </thead>
-        <tbody>
-           	 <tr th:each="question, loop : ${questionList}">
-                <td th:text="${loop.count}"></td>
-                <td>
-                    <a th:href="@{|/question/detail/${question.id}|}" th:text="${question.subject}"></a>
-                </td>
-                <td th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd HH:mm')}"></td>
-            </tr>
-       	  </tbody>
-   		 </table>
+		<table class="table">
+			<thead class="table-dark">
+				<tr>
+					<th>번호</th>
+					<th>제목</th>
+					<th>작성일시</th>
+				</tr>
+			</thead>
+			<tbody>
+                <!-- 번호는 loop.count를 사용하여 표시 : 자바객체의 id가 아님(주의), 단순 번호임 -->
+				<tr th:each="question, loop : ${questionList}">
+					<td th:text="${loop.count}"></td>
+					<td><a th:href="@{|/question/detail/${question.id}|}"
+						th:text="${question.subject}"></a></td>
+                    <!-- 타임리프 #temporals.format(날짜 객체, 날짜 포맷)	 -->
+					<td	th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd HH:mm')}"></td>
+				</tr>
+			</tbody>
+		</table>
+	<a th:href="@{/question/create}" class="btn btn-primary">질문 등록하기</a>
 	</div>
 </body>
 </html>
