@@ -1,20 +1,13 @@
 package com.mysite.sbb;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.Optional;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 
 import com.mysite.sbb.answer.AnswerRepository;
-import com.mysite.sbb.question.Question;
 import com.mysite.sbb.question.QuestionRepository;
-
-import jakarta.transaction.Transactional;
+import com.mysite.sbb.question.QuestionService;
 
 @SpringBootTest
 class SbbApplicationTests {
@@ -25,8 +18,11 @@ class SbbApplicationTests {
 	@Autowired
 	private AnswerRepository answerRepository;
 
+	@Autowired
+	private QuestionService questionService;
+
 	// test_Jpa() 대하여 DB 세션을 유지시킨다. (모든 DB 작업이 성공해야 커밋되고, 하나라도 실패하면 모두 롤백)
-	@Transactional
+//	@Transactional
 	@Rollback(false)
 	@Test
 	void testJpa() {
@@ -79,13 +75,13 @@ class SbbApplicationTests {
 //		q.setSubject("수정된 제목입니다");
 //		this.questionRepository.save(q);
 
-		// 질문 데이터 삭제하기
-		assertEquals(2, this.questionRepository.count());
-		Optional<Question> op = this.questionRepository.findById(1);
-		assertTrue(op.isPresent());
-		Question q = op.get();
-		this.questionRepository.delete(q);
-		assertEquals(1, this.questionRepository.count());
+//		// 질문 데이터 삭제하기
+//		assertEquals(2, this.questionRepository.count());
+//		Optional<Question> op = this.questionRepository.findById(1);
+//		assertTrue(op.isPresent());
+//		Question q = op.get();
+//		this.questionRepository.delete(q);
+//		assertEquals(1, this.questionRepository.count());
 
 		// 답변 데이터 저장하기 --> 어떤 질문의 답변인지...
 //		Optional<Question> op = this.questionRepository.findById(2);
@@ -113,6 +109,14 @@ class SbbApplicationTests {
 //
 //		assertEquals(1, answerList.size());
 //		assertEquals("답변입니다", answerList.get(0).getContent());
+
+		// 테스트 데이터 300개 만들기
+
+		for (int i = 1; i <= 300; i++) {
+			String subject = String.format("테스트 테이터입니다:[%03d]", i);
+			String content = "내용무";
+			this.questionService.create(subject, content);
+		}
 	}
 
 }
