@@ -1,6 +1,9 @@
 package com.mysite.sbb.question;
 
+import java.security.Principal;
+
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -11,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.mysite.sbb.answer.AnswerForm;
+import com.mysite.sbb.user.SiteUser;
+import com.mysite.sbb.user.UserService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +28,8 @@ public class QuestionController {
 
 	// Controller 에 있는 repository 기능을 모두 service 에게 전달
 	private final QuestionService questionService;
+	// DI(객체 주입) --> UserService 추가
+	private final UserService userService;
 
 	// 질문 목록
 	@GetMapping("/list")
@@ -43,20 +50,25 @@ public class QuestionController {
 
 	}
 
+	// @PreAuthorize("isAuthenticated()") --> 로그인이 된 경우만 실행 --> 로그인 x , 로그인 페이지로 강제
+	// 이동
+	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/create")
 	public String questionCreate(QuestionForm questionForm) {
 		return "question_form";
 	}
 
-	// 메서드 오버로딩
+	// 스프링 시큐리티 Principal 객체를 매개변수로 선언
+	@PreAuthorize("isAuthenticated()")
 	@PostMapping("/create")
-	// @Valid --> 유효성 검사 트리거(방아쇠) 역할
-	// QuestionForm --> 사용자가 입력한 질문 데이터를 담기 위한 DTO(데이터 전달 객체) --> 2-3 컨트롤러에 전송하기 보세요
-	public String questionCreate(@Valid QuestionForm questionForm, BindingResult bindingResult) {
+	public String questionCreate(@Valid QuestionForm questionForm, BindingResult bindingResult, Principal principal) {
 		if (bindingResult.hasErrors()) {
 			return "question_form";
 		}
-		this.questionService.create(questionForm.getSubject(), questionForm.getContent());
+		// principal 객체를 통해서 사용자명을 얻고, siteUser 객체를 얻음
+		SiteUser siteUser = this.userService.getUser(principal.getName());
+		// 질문이 등록 될 때 siteUser(글쓴이id) 저장
+		this.questionService.create(questionForm.getSubject(), questionForm.getContent(), siteUser);
 		return "redirect:/question/list";
 	}
 
