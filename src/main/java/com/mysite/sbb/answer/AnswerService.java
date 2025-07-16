@@ -27,6 +27,7 @@ public class AnswerService {
 		// answer 객체를 저장한다
 		this.answerRepository.save(answer);
 		return answer;
+
 	}
 
 	public Answer getAnswer(Integer id) {
@@ -48,4 +49,8 @@ public class AnswerService {
 		this.answerRepository.delete(answer);
 	}
 
+	public void vote(Answer answer, SiteUser siteUser) {
+		answer.getVoter().add(siteUser);
+		this.answerRepository.save(answer);
+	}
 }

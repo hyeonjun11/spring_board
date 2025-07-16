@@ -40,6 +40,8 @@ dependencies {
  	// security
    	implementation 'org.springframework.boot:spring-boot-starter-security'
   	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+  	//markdown
+  	implementation 'org.commonmark:commonmark:0.21.0'
  
 }
 
