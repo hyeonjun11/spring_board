@@ -1,5 +1,7 @@
 package com.mysite.sbb.question;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.security.Principal;
 
 import org.springframework.data.domain.Page;
@@ -32,14 +34,14 @@ public class QuestionController {
 	private final UserService userService;
 
 	// 질문 목록
-	/*
-	 * @GetMapping("/list") public String list(Model model, @RequestParam(value =
-	 * "page", defaultValue = "0") int page) { Page<Question> paging =
-	 * this.questionService.getList(page); model.addAttribute("paging", paging);
-	 * return "question_list";
-	 * 
-	 * }
-	 */
+//	@GetMapping("/list")
+//	public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
+//		Page<Question> paging = this.questionService.getList(page);
+//		model.addAttribute("paging", paging);
+//		return "question_list";
+//
+//	}
+
 	@GetMapping("/list")
 	public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page,
 			@RequestParam(value = "kw", defaultValue = "") String kw) {
@@ -78,7 +80,10 @@ public class QuestionController {
 		// principal 객체를 통해서 사용자명 얻고, siteUser 객체를 얻음
 		SiteUser siteUser = this.userService.getUser(principal.getName());
 		// 질문 등록 될때 siteUser(글쓴이 id) 저장
-		this.questionService.create(questionForm.getSubject(), questionForm.getContent(), siteUser);
+//		this.questionService.create(questionForm.getSubject(), questionForm.getContent(), siteUser);
+		String con = URLDecoder.decode(questionForm.getContent(), StandardCharsets.UTF_8);
+		this.questionService.create(questionForm.getSubject(), con, siteUser);
+
 		return "redirect:/question/list";
 	}
 
